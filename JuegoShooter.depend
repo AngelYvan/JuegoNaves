@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1574289628 source:d:\proyectoscodeblocks\juegoshooter\main.cpp
+	<windows.h>
+	<math.h>
+	<stdlib.h>
+	<stdio.h>
+	<iostream>
+	<GL/glut.h>
+	"space_sprites.h"
+	"space_alpha.h"
+
+976692172 c:\glut\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1574289628 d:\proyectoscodeblocks\juegoshooter\space_sprites.h
+	<string.h>
+
+1574289628 d:\proyectoscodeblocks\juegoshooter\space_alpha.h
+
