@@ -19,3 +19,18 @@
 
 1574289628 d:\proyectoscodeblocks\juegoshooter\space_alpha.h
 
+1574306123 source:d:\juegonaves\main.cpp
+	<windows.h>
+	<math.h>
+	<stdlib.h>
+	<stdio.h>
+	<iostream>
+	<GL/glut.h>
+	"space_sprites.h"
+	"space_alpha.h"
+
+1574306123 d:\juegonaves\space_sprites.h
+	<string.h>
+
+1574306123 d:\juegonaves\space_alpha.h
+
