@@ -19,18 +19,20 @@
 
 1574289628 d:\proyectoscodeblocks\juegoshooter\space_alpha.h
 
-1574306123 source:d:\juegonaves\main.cpp
+1575882711 source:d:\juegonaves\main.cpp
 	<windows.h>
 	<math.h>
 	<stdlib.h>
 	<stdio.h>
 	<iostream>
 	<GL/glut.h>
+	<Windows.h>
+	<MMSystem.h>
 	"space_sprites.h"
 	"space_alpha.h"
 
-1574306123 d:\juegonaves\space_sprites.h
+1575882666 d:\juegonaves\space_sprites.h
 	<string.h>
 
-1574306123 d:\juegonaves\space_alpha.h
+1575882666 d:\juegonaves\space_alpha.h
 

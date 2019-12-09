@@ -7,11 +7,14 @@
 float tx;                           // tx y ty dan movimiento al conjunto de sprites enemigos
 float ty;
 float posx;                         // variable que se suma al movimiento de la nave
+float posy;                         // variable que se suma al movimiento de la nave
 int flagizq;                        // switch que activa o desactiva mov sprites a la izq
 int flagder;                        // switch que activa o desactiva mov sprites a la der
 int temp_aux;                       // temporizador auxiliar
 int attack_flag;                    // flags para soporte al disparo
 int bullet_flag;                    // flags para soporte al disparo
+int bomb_flag;                      // flag para soporte a la bomba
+float bomb_rad;                     // radio de la bomba
 float bullet_x;                     // bullet_x y bullet_y posicionan el "sprite" del disparo
 float bullet_y;
 int puntaje;
@@ -31,6 +34,7 @@ void cargar_variables(){
     flagder     =   1;
     attack_flag =   0;
     bullet_flag =   0;
+    bomb_rad    =   0.1;
     temp_aux    =   0;
     screen      =   0;
     puntaje     =   0;
@@ -44,7 +48,7 @@ void disparo() {
     if (attack_flag==1){            // condicion que se activa si se ejecuta el disparo
         if(bullet_flag==0){         // esta condicion permite el posicionamiento respecto al eje x e y,
             bullet_x=10+posx+0.4;   // puesto que el posicionamiento respecto a x es variable segun
-            bullet_y=3;             // la nave este debe asignarse solo una vez y luego bloquearse
+            bullet_y=posy+0.4;             // la nave este debe asignarse solo una vez y luego bloquearse
             bullet_flag=1;          // con un el flag "bullet_flag"
         }
 
@@ -58,7 +62,34 @@ void disparo() {
     }
 }
 /***********************************************************************************************************/
+void disparoBomb() {
+
+    if (bomb_flag==1){            // condicion que se activa si se ejecuta el disparo
+            if(bomb_rad>=20){
+                bomb_flag=0;
+                bomb_rad=0.1;
+            }else{
+                bomb_rad=bomb_rad+0.05;
+                bomba(bomb_rad);
+            }
+        /*if(bullet_flag==0){         // esta condicion permite el posicionamiento respecto al eje x e y,
+            bullet_x=10+posx+0.4;   // puesto que el posicionamiento respecto a x es variable segun
+            bullet_y=posy+0.4;             // la nave este debe asignarse solo una vez y luego bloquearse
+            bullet_flag=1;          // con un el flag "bullet_flag"
+        }
+
+        if(bullet_y>=20){
+            attack_flag=0;
+            bullet_flag=0;
+        }
+        else{
+            bala(bullet_x, bullet_y);
+        }*/
+    }
+}
+/***********************************************************************************************************/
 void pantalla_de_juego(){
+
     float a, b;
     int c=0;
     int enemigo=0;
@@ -71,11 +102,13 @@ void pantalla_de_juego(){
     for(a=16, c=0; a>=11.5; a=a-1.1000, c++){           // Ciclo y condicionales funcionan como
         for(b=3.1; b<=16.4; b=b+1.3000){                // ubicadores de sprite y detectores de colisiones
             if(c==0){                                   // a base de MBR
-                if (!(((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
-                ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8)))  && VIVO[enemigo]==1){
+                if (!(
+                      (((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
+                      ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8))) ||
+                      (bomb_rad*2>sqrt(pow(b+tx,2)+pow(a+ty,2)))
+                      )  && VIVO[enemigo]==1){
                     ubicar_sprite(0, b+tx, a+ty, 0.08);
-                }
-                else{
+                }else{
                     if(VIVO[enemigo]!=0){
                         ubicar_sprite(5, b+tx, a+ty, 0.08);
                         VIVO[enemigo]=0;
@@ -85,14 +118,15 @@ void pantalla_de_juego(){
                         puntaje=puntaje+300;
                     }
                 }
-            }
-            else{
+            }else{
                 if(c==1 || c==2){
-                    if (!(((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
-                    ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8)))  && VIVO[enemigo]==1){
+                    if (!(
+                          (((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
+                          ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8))) ||
+                          (bomb_rad*2>sqrt(pow(b+tx,2)+pow(a+ty,2)))
+                          )  && VIVO[enemigo]==1){
                         ubicar_sprite(1, b+tx, a+ty, 0.08);
-                    }
-                    else{
+                    }else{
                         if(VIVO[enemigo]!=0){
                             ubicar_sprite(5, b+tx, a+ty, 0.08);
                             VIVO[enemigo]=0;
@@ -102,10 +136,12 @@ void pantalla_de_juego(){
                             puntaje=puntaje+200;
                         }
                     }
-                }
-                else{
-                    if (!(((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
-                    ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8)))  && VIVO[enemigo]==1){
+                }else{
+                    if (!(
+                          (((bullet_x>= b+tx) && (bullet_x<=(b+tx)+0.08*11)) &&
+                          ((bullet_y<= a+ty) && (bullet_y>=(a+ty)-0.08*8))) ||
+                          (bomb_rad*2>sqrt(pow(b+tx,2)+pow(a+ty,2)))
+                          )  && VIVO[enemigo]==1){
                         ubicar_sprite(2, b+tx, a+ty, 0.08);
                     }
                     else{
@@ -130,9 +166,10 @@ void pantalla_de_juego(){
         glVertex3i(-10,-9,0);
         glVertex3i(10,-9,0);
     glEnd();
-    ubicar_sprite(4, 10+posx, 3, 0.08);                 // Ubica la nave en la pantalla
+    ubicar_sprite(4, 10+posx, posy, 0.08);                 // Ubica la nave en la pantalla
     disparo();                                          // Solo produce efectos visibles luego de oprimir
                                                         // el disparador (flecha arriba)
+    disparoBomb();
 
     glutSwapBuffers();
 }
@@ -142,9 +179,9 @@ void presentacion(){
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
     glColor3f(1.0f,1.0f,1.0f);
-    say_space(5.5, 17);
+    say_space(3.5, 17);
     glColor3f(0.0f,1.0f,0.0f);
-    say_invaders(3.5, 15);
+    say_invaders(1, 15);
     glColor3f(1.0f,1.0f,1.0f);
     ubicar_sprite(2, 7, 10.5, 0.1);
     ubicar_sprite(1, 7, 9, 0.1);
