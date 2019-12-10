@@ -5,13 +5,15 @@
 #include <stdio.h>
 #include <iostream>
 
-using namespace std;
+//using namespace std;
 
 #include <GL/glut.h>
 #include <Windows.h>
-#include <MMSystem.h>
+//#include <MMSystem.h>
 #include "space_sprites.h"
 #include "space_alpha.h"
+
+
 
 /***********************************************************************************************************/
 
@@ -25,12 +27,22 @@ void IniciarGLUT() {
 /***********************************************************************************************************/
 void PintarEscena() {                                   // primero muestra la patalla de presentacion
     if (screen==0){                                     // si se presiona enter se parte con el juego
+        if(!introOn){
+            engine->drop();
+            engine = createIrrKlangDevice();
+            engine->play2D("C:/musica/intro.ogg");
+            introOn=true;
+        }
 
         presentacion();
     }
     if (screen==1){
-        //sndPlaySound(TEXT("musica.wav"),SND_ASYNC);
-
+        if(!musicaOn){
+            engine->drop();
+            engine = createIrrKlangDevice();
+            engine->play2D("C:/musica/musica.ogg");
+            musicaOn=true;
+        }
         pantalla_de_juego();
     }
 }
@@ -53,8 +65,6 @@ void ControlTeclado(unsigned char key, int x, int y){   // Necesario describir?
             case 13:
                 if(screen==0){
                     screen=1;
-                    //PlaySound(TEXT("2.wav"),NULL,SND_ASYNC);
-                    //PlaySound(TEXT("2.wav"),NULL,SND_FILENAME|SND_LOOP|SND_ASYNC|SND_NOSTOP);
                 }
             break;
             case 27:
@@ -94,19 +104,18 @@ void ControlFlechas(int key, int x, int y){             // Necesario describir?
         break;
         case GLUT_KEY_END:
             attack_flag=1;
-            PlaySound(TEXT("disparo.wav"),NULL,SND_ASYNC);
+            engine->play2D("C:/musica/disparo.wav");
         break;
         case GLUT_KEY_HOME:
             bomb_flag=1;
-            PlaySound(TEXT("bomba.wav"),NULL,SND_ASYNC);
+            engine->play2D("C:/musica/bomba.wav");
         break;
     }
-    cout<<"posx="<<posx<<" posy="<<posy<<endl;
+    //cout<<"posx="<<posx<<" posy="<<posy<<endl;
     glutPostRedisplay();
 }
 /***********************************************************************************************************/
 int main(int argc, char **argv){
-
     cargar_variables();
     glutInit(&argc,argv);
     IniciarGLUT();

@@ -1,6 +1,8 @@
 #ifndef SPACE_ALPHA_H_INCLUDED
 #define SPACE_ALPHA_H_INCLUDED
-
+#include <irrKlang.h>
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
 /***********************************************************************************************************/
                                     // Variables globales que apoyan el proceso del juego
 
@@ -21,6 +23,9 @@ int puntaje;
 int VIVO[55];
 int screen;
 float ufo[2];
+ISoundEngine* engine;
+bool introOn;
+bool musicaOn;
 /***********************************************************************************************************/
 
 void cargar_variables(){
@@ -40,6 +45,14 @@ void cargar_variables(){
     puntaje     =   0;
     for(i=0; i<55; i++){
         VIVO[i]=1;
+    }
+
+    introOn=false;
+    musicaOn=false;
+    engine = createIrrKlangDevice();
+    printf("Got this far. \n");
+    if (!engine){
+        printf("Engine Not Started");
     }
 }
 
@@ -112,6 +125,7 @@ void pantalla_de_juego(){
                     if(VIVO[enemigo]!=0){
                         ubicar_sprite(5, b+tx, a+ty, 0.08);
                         VIVO[enemigo]=0;
+                        engine->play2D("C:/musica/kill.wav");
                         attack_flag=0;
                         bullet_flag=0;
                         bullet_y=20;
@@ -130,6 +144,7 @@ void pantalla_de_juego(){
                         if(VIVO[enemigo]!=0){
                             ubicar_sprite(5, b+tx, a+ty, 0.08);
                             VIVO[enemigo]=0;
+                            engine->play2D("C:/musica/kill.wav");
                             attack_flag=0;
                             bullet_flag=0;
                             bullet_y=20;
@@ -148,6 +163,7 @@ void pantalla_de_juego(){
                         if(VIVO[enemigo]!=0){
                             ubicar_sprite(5, b+tx, a+ty, 0.08);
                             VIVO[enemigo]=0;
+                            engine->play2D("C:/musica/kill.wav");
                             attack_flag=0;
                             bullet_flag=0;
                             bullet_y=20;
